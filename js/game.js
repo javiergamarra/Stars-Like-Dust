@@ -26,7 +26,7 @@ var starsLikeDust = (function () {
 		return {
 			draw : draw
 		};
-	}());
+	})();
 
 	var hero = (function () {
 		var SPEED = 8;
@@ -68,7 +68,7 @@ var starsLikeDust = (function () {
 			moveLeft : moveLeft,
 			moveRight : moveRight
 		};
-	}());
+	})();
 
 	function move() {
 		if ((keys[38] !== undefined && keys[38]) || (keys[87] !== undefined && keys[87])) { // up
@@ -97,5 +97,5 @@ var starsLikeDust = (function () {
 		start : start
 	};
 
-}());
+})();
 starsLikeDust.start();
