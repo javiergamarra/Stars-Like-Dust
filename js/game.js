@@ -14,18 +14,12 @@ var starsLikeDust = (function() {
 		this.image.src = "images/laser.png";
 	}
 
-	Shoot.prototype.setPosition = function(positionX, positionY) {
-		x = positionX;
-		y = positionY;
-	}
-
 	Shoot.prototype.draw = function(ctx) {
 		this.x = this.x + 10;
 		ctx.drawImage(this.image, this.x, this.y + 25);
-	}
+	};
 
 	var hero = (function() {
-		'use strict';
 		var SPEED = 6, image = new Image(), x = 50, y = 250;
 		image.src = "images/hero.png";
 		function setPosition(positionX, positionY) {
@@ -75,7 +69,6 @@ var starsLikeDust = (function() {
 	}());
 
 	var background = (function() {
-		'use strict';
 		var x = 0;
 		var image = new Image(), draw = function(ctx) {
 			x = x - 0.5;
@@ -102,20 +95,16 @@ var starsLikeDust = (function() {
 	window.addEventListener('keyup', doKeyUp, true);
 
 	function move() {
-		if ((keys[38] !== undefined && keys[38])
-				|| (keys[87] !== undefined && keys[87])) { // up
+		if ((keys[38] !== undefined && keys[38]) || (keys[87] !== undefined && keys[87])) { // up
 			hero.moveUp();
 		}
-		if ((keys[40] !== undefined && keys[40])
-				|| (keys[83] !== undefined && keys[83])) { // down
+		if ((keys[40] !== undefined && keys[40]) || (keys[83] !== undefined && keys[83])) { // down
 			hero.moveDown();
 		}
-		if ((keys[37] !== undefined && keys[37])
-				|| (keys[65] !== undefined && keys[65])) { // left
+		if ((keys[37] !== undefined && keys[37]) || (keys[65] !== undefined && keys[65])) { // left
 			hero.moveLeft();
 		}
-		if ((keys[39] !== undefined && keys[39])
-				|| (keys[68] !== undefined && keys[68])) { // right
+		if ((keys[39] !== undefined && keys[39]) || (keys[68] !== undefined && keys[68])) { // right
 			hero.moveRight();
 		}
 	}
