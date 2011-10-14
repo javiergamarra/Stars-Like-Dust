@@ -1,4 +1,6 @@
-var background = (function () {
+var starsLikeDust = {};
+
+starsLikeDust.background = (function () {
 	'use strict';
 	var image = new Image(), draw = function (ctx) {
 		ctx.drawImage(image, 0, 0);
@@ -9,9 +11,10 @@ var background = (function () {
 	};
 }());
 
-var hero = (function () {
+starsLikeDust.hero = (function () {
 	'use strict';
 	var SPEED = 8, image = new Image(), x = 50, y = 250;
+	image.src = "images/hero.png";
 	function setPosition(positionX, positionY) {
 		x = positionX;
 		y = positionY;
@@ -31,7 +34,7 @@ var hero = (function () {
 	}
 	function moveUp() {
 		if (y > 0) {
-			setPosition(x, y - 8);
+			setPosition(x, y - SPEED);
 		}
 	}
 	function moveDown() {
@@ -39,7 +42,6 @@ var hero = (function () {
 			setPosition(x, y + SPEED);
 		}
 	}
-	image.src = "images/hero.png";
 	return {
 		draw : draw,
 		moveUp : moveUp,
@@ -49,7 +51,7 @@ var hero = (function () {
 	};
 }());
 
-var starsLikeDust = (function () {
+starsLikeDust.engine = (function () {
 	'use strict';
 	var canvas = document.getElementById("canvas"), keys = [], CANVAS_HEIGHT = 500, loop;
 	var ctx = canvas.getContext("2d");
@@ -68,6 +70,7 @@ var starsLikeDust = (function () {
 	window.addEventListener('keyup', doKeyUp, true);
 
 	function move() {
+		var hero = starsLikeDust.hero;
 		if ((keys[38] !== undefined && keys[38])
 				|| (keys[87] !== undefined && keys[87])) { // up
 			hero.moveUp();
@@ -89,8 +92,8 @@ var starsLikeDust = (function () {
 	function start() {
 		move();
 		canvas.width = canvas.width;
-		background.draw(ctx);
-		hero.draw(ctx);
+		starsLikeDust.background.draw(ctx);
+		starsLikeDust.hero.draw(ctx);
 		loop = setTimeout(start, 1000 / 100);
 	}
 
@@ -99,4 +102,4 @@ var starsLikeDust = (function () {
 	};
 }());
 
-starsLikeDust.start();
+starsLikeDust.engine.start();
