@@ -2,11 +2,18 @@ var starsLikeDust = (function() {
 	'use strict';
 	var canvas = document.getElementById("canvas"), keys = [], CANVAS_HEIGHT = 500, loop;
 	var ctx = canvas.getContext("2d");
-	var shoots = [];
+	var shoots = [], asteroids = [];
 	canvas.width = window.innerWidth - 100;
 	canvas.height = CANVAS_HEIGHT;
 
-	// FIXME clean shoots when they get outside the view
+	for ( var i = 0, j = Math.floor(Math.random() * 7); i < j; i++) {
+		asteroids.push(new Asteroid(canvas.width - (Math.random() * 100) - 50,
+				canvas.height / 2 + (Math.random() * 300) - 150));
+	}
+
+	window.addEventListener('keydown', doKeyDown, true);
+	window.addEventListener('keyup', doKeyUp, true);
+
 	function Shoot(positionX, positionY) {
 		this.x = positionX;
 		this.y = positionY;
@@ -15,8 +22,24 @@ var starsLikeDust = (function() {
 	}
 
 	Shoot.prototype.draw = function(ctx) {
-		this.x = this.x + 10;
-		ctx.drawImage(this.image, this.x, this.y + 25);
+		if (this.x < canvas.width) {
+			this.x = this.x + 10;
+			ctx.drawImage(this.image, this.x, this.y + 25);
+		}
+	};
+
+	function Asteroid(positionX, positionY) {
+		this.x = positionX;
+		this.y = positionY;
+		this.image = new Image();
+		this.image.src = "images/asteroid.png";
+	}
+
+	Asteroid.prototype.draw = function(ctx) {
+		if (this.x < canvas.width) {
+			this.x = this.x - 2;
+			ctx.drawImage(this.image, this.x, this.y - 4);
+		}
 	};
 
 	var hero = (function() {
@@ -48,12 +71,6 @@ var starsLikeDust = (function() {
 			if (y + image.height < canvas.height) {
 				setPosition(x, y + SPEED);
 			}
-		}
-		function getX() {
-			return x;
-		}
-		function getY() {
-			return y;
 		}
 		function shoot() {
 			shoots.push(new Shoot(x, y));
@@ -91,38 +108,46 @@ var starsLikeDust = (function() {
 		keys[evt.keyCode] = false;
 	}
 
-	window.addEventListener('keydown', doKeyDown, true);
-	window.addEventListener('keyup', doKeyUp, true);
-
-	function move() {
-		if ((keys[38] !== undefined && keys[38]) || (keys[87] !== undefined && keys[87])) { // up
+	function moveHero() {
+		if ((keys[38] !== undefined && keys[38])
+				|| (keys[87] !== undefined && keys[87])) { // up
 			hero.moveUp();
 		}
-		if ((keys[40] !== undefined && keys[40]) || (keys[83] !== undefined && keys[83])) { // down
+		if ((keys[40] !== undefined && keys[40])
+				|| (keys[83] !== undefined && keys[83])) { // down
 			hero.moveDown();
 		}
-		if ((keys[37] !== undefined && keys[37]) || (keys[65] !== undefined && keys[65])) { // left
+		if ((keys[37] !== undefined && keys[37])
+				|| (keys[65] !== undefined && keys[65])) { // left
 			hero.moveLeft();
 		}
-		if ((keys[39] !== undefined && keys[39]) || (keys[68] !== undefined && keys[68])) { // right
+		if ((keys[39] !== undefined && keys[39])
+				|| (keys[68] !== undefined && keys[68])) { // right
 			hero.moveRight();
 		}
 	}
 
-	function start() {
-		move();
-		canvas.width = canvas.width;
+	function drawEnvironment() {
+		canvas.width = canvas.width; // clear canvas
 		background.draw(ctx);
 		hero.draw(ctx);
-		for ( var i = 0, j = shoots.length; i < j; i++) {
-			shoots[i].draw(ctx);
-		}
-		loop = setTimeout(start, 1000 / 100);
+		shoots.forEach(function(shoot) {
+			shoot.draw(ctx);
+		});
+		asteroids.forEach(function(asteroid) {
+			asteroid.draw(ctx);
+		})
+	}
+
+	function gameLoop() {
+		moveHero();
+		drawEnvironment();
+		loop = setTimeout(gameLoop, 1000 / 100);
 	}
 
 	return {
-		start : start
+		gameLoop : gameLoop
 	};
 }());
 
-starsLikeDust.start();
+starsLikeDust.gameLoop();
